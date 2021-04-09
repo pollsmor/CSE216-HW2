@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Collections;
 
 public class Ordering {
 
@@ -16,8 +18,7 @@ public class Ordering {
         }
     }
 
-    // TODO: There's a lot wrong with this method. correct it so that it can work properly with generics.
-    static <T> void copy(List<TwoDShape> source, List<TwoDShape> destination) {
+    static <T> void copy(List<? extends TwoDShape> source, List<TwoDShape> destination) {
         destination.addAll(source);
     }
 
@@ -26,20 +27,18 @@ public class Ordering {
      * PLEASE READ ALL THE COMMENTS IN THIS CODE CAREFULLY BEFORE YOU START WRITING YOUR OWN CODE.
      */
     public static void main(String[] args) {
-
-        // TODO: The following two lines are using the raw type. Equip them with the proper parameters so that they work with the remainder of the code that follows.
-        List shapes = new ArrayList();
-        List points = new ArrayList();
+        List<TwoDShape> shapes = new ArrayList<>();
+        List<Point> points = new ArrayList<>();
 
         /* ====== SECTION 1 ====== */
         /* uncomment the following block and fill in the "..." constructors to create actual instances. If your
          * implementations are correct, then the code should compile and yield the expected results of the various
          * shapes being ordered by their smallest x-coordinate, area, volume, surface area, etc. */
 
-        /*
-        shapes.add(new Circle(...));
-        shapes.add(new Triangle(...));
-        shapes.add(new Quadrilateral(...));
+        shapes.add(new Circle(0, 0, 4));
+        shapes.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(3, 0), new TwoDPoint(0, 4))));
+        shapes.add(new Quadrilateral(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 0),
+                                                   new TwoDPoint(5, 5), new TwoDPoint(0, 5))));
 
         copy(new ArrayList<Circle>(), shapes); // note-1 //
 
@@ -51,7 +50,6 @@ public class Ordering {
         // TODO: Implement a static nested class so that uncommenting the following line works. The XLocationPointComparator must sort all the points in a collection in increasing order of their x-values.
         // points.sort(new XLocationPointComparator());
         Collections.sort(points); // TODO: Must sort the points in increasing order of their distance from the origin
-         */
 
         /* ====== SECTION 2 ====== */
         /* if your changes to copy() are correct, uncommenting the following block will also work as expected note that
@@ -109,13 +107,15 @@ public class Ordering {
      * @param aPrinter the specified printer instance
      * @return the least element from <code>aList</code>, as per the natural ordering of the shapes
      */
-    static Object printAllAndReturnLeast(List aList, AbstractPrinter aPrinter) {
-        Object least = aList.get(0);
-        for (Object t : aList) {
+    /*
+     static TwoDShape printAllAndReturnLeast(List<TwoDShape> aList, AbstractPrinter<Printer<TwoDShape>> aPrinter) {
+        TwoDShape least = aList.get(0);
+        for (TwoDShape t : aList) {
             if (least.compareTo(t) < 0)
                 least = t;
             aPrinter.print(t);
         }
         return least;
     }
+     */
 }
