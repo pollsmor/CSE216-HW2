@@ -68,13 +68,47 @@ public class Quadrilateral implements TwoDShape, Positionable {
      * @return the area of this quadrilateral
      */
     public double area() {
-        return 0; // TODO
+        // Get coordinates for the three points
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+        double x4 = vertices.get(3).coordinates()[0];
+        double y4 = vertices.get(3).coordinates()[1];
+
+        // Get distances of the three lines in the triangle for Heron's formula
+        double a = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));   // Distance of line from p1 to p2
+        double b = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));   // Distance of line from p2 to p3
+        double c = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y4 - y3, 2));   // Distance of line from p3 to p4
+        double d = Math.sqrt(Math.pow(x1 - x4, 2) + Math.pow(y1 - y4, 2));   // Distance of line from p4 to p1
+        double s = (a + b + c + d) / 2;
+        return Math.sqrt((s - a) * (s - b) * (s - c) * (s - d));
     }
 
     /**
      * @return the perimeter (i.e., the total length of the boundary) of this quadrilateral
      */
     public double perimeter() {
-        return 0; // TODO
+        double output = 0.0;
+
+        // Get coordinates for the three points
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+        double x4 = vertices.get(3).coordinates()[0];
+        double y4 = vertices.get(3).coordinates()[1];
+
+        // Get distances of the four lines in the quadrilateral
+        output += Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));   // Distance of line from p1 to p2
+        output += Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));   // Distance of line from p2 to p3
+        output += Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y4 - y3, 2));   // Distance of line from p3 to p4
+        output += Math.sqrt(Math.pow(x1 - x4, 2) + Math.pow(y1 - y4, 2));   // Distance of line from p4 to p1
+
+        return output;
     }
 }
