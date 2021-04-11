@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Collections;
 
-public class Circle implements TwoDShape, Positionable {
+public class Circle implements TwoDShape {
 
     private TwoDPoint center;
     private double    radius;
@@ -70,4 +70,8 @@ public class Circle implements TwoDShape, Positionable {
         return 2 * Math.PI * radius;
     }
 
+    @Override
+    public String toString() {
+        return "Circle[(" + center.coordinates()[0] + ", " + center.coordinates()[1] + "), R: " + radius + "]";
+    }
 }

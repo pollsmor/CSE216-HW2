@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Quadrilateral implements TwoDShape, Positionable {
+public class Quadrilateral implements TwoDShape {
 
     List<TwoDPoint> vertices;
 
     public Quadrilateral(List<TwoDPoint> vertices) {
         this.vertices = vertices;
+        setPosition(vertices);
     }
 
     /**
@@ -38,6 +39,9 @@ public class Quadrilateral implements TwoDShape, Positionable {
 
         List<TwoDPoint> vertices = new ArrayList<>(4);
         List<Point> copyOfPoints = new ArrayList<>(points);
+        // For polar angle calculations later: average of x and y coords
+        double avgX = (x1 + x2 + x3 + x4) / 4;
+        double avgY = (y1 + y2 + y3 + y4) / 4;
 
         // Find 1st pair, located as far to the bottom left as possible
         double leastXCoord = Math.min(Math.min(x1, x2), Math.min(x3, x4));
@@ -53,24 +57,37 @@ public class Quadrilateral implements TwoDShape, Positionable {
         else if (x3 == leastXCoord && y3 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(2);
         else copyOfPoints.remove(3);
 
-        // 2nd pair will be located somewhere *above* the 3rd pair, this is assuming a pair has been removed from points
+        // Sort by polar angle for remaining points
         x1 = copyOfPoints.get(0).coordinates()[0];
         y1 = copyOfPoints.get(0).coordinates()[1];
         x2 = copyOfPoints.get(1).coordinates()[0];
         y2 = copyOfPoints.get(1).coordinates()[1];
         x3 = copyOfPoints.get(2).coordinates()[0];
         y3 = copyOfPoints.get(2).coordinates()[1];
-        double maxYCoord = Math.max(y1, y2);
-        List<Double> xcoordsPairedWithMaxYCoord = new ArrayList<>(2);
-        if (y1 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x1);
-        if (y2 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x2);
-        vertices.add(new TwoDPoint(Collections.min(xcoordsPairedWithMaxYCoord), maxYCoord));
-        // Remove the relevant point f rom the input list, remaining point will be the last one
-        if (y1 == maxYCoord && x1 == Collections.min(xcoordsPairedWithMaxYCoord)) copyOfPoints.remove(0);
-        else copyOfPoints.remove(1);
+
+        double angle1 = Math.atan2(y1 - avgY, x1 - avgX);
+        double angle2 = Math.atan2(y2 - avgY, x2 - avgX);
+        double angle3 = Math.atan2(y3 - avgY, x3 - avgX);
+        List<Double> angles = new ArrayList<>(3);
+        angles.add(angle1);
+        angles.add(angle2);
+        angles.add(angle3);
+        angles.sort(Collections.reverseOrder());
+
+        // 2nd pair - is in counterclockwise order so I actually want to add right to left
+        if (angles.get(0) == angle1) vertices.add(new TwoDPoint(x1, y1));
+        else if (angles.get(0) == angle2) vertices.add(new TwoDPoint(x2, y2));
+        else if (angles.get(0) == angle3) vertices.add(new TwoDPoint(x3, y3));
+
+        // 3rd pair
+        if (angles.get(1) == angle1) vertices.add(new TwoDPoint(x1, y1));
+        else if (angles.get(1) == angle2) vertices.add(new TwoDPoint(x2, y2));
+        else if (angles.get(1) == angle3) vertices.add(new TwoDPoint(x3, y3));
 
         // 4th pair
-        vertices.add(new TwoDPoint(copyOfPoints.get(0).coordinates()[0], copyOfPoints.get(0).coordinates()[1]));
+        if (angles.get(2) == angle1) vertices.add(new TwoDPoint(x1, y1));
+        else if (angles.get(2) == angle2) vertices.add(new TwoDPoint(x2, y2));
+        else if (angles.get(2) == angle3) vertices.add(new TwoDPoint(x3, y3));
 
         this.vertices = vertices;
     }
@@ -154,7 +171,7 @@ public class Quadrilateral implements TwoDShape, Positionable {
      * @return the area of this quadrilateral
      */
     public double area() {
-        // Get coordinates for the three points
+        // Get coordinates for the four points
         double x1 = vertices.get(0).coordinates()[0];
         double y1 = vertices.get(0).coordinates()[1];
         double x2 = vertices.get(1).coordinates()[0];
@@ -188,7 +205,7 @@ public class Quadrilateral implements TwoDShape, Positionable {
     public double perimeter() {
         double output = 0.0;
 
-        // Get coordinates for the three points
+        // Get coordinates for the four points
         double x1 = vertices.get(0).coordinates()[0];
         double y1 = vertices.get(0).coordinates()[1];
         double x2 = vertices.get(1).coordinates()[0];
@@ -205,5 +222,21 @@ public class Quadrilateral implements TwoDShape, Positionable {
         output += Math.sqrt(Math.pow(x1 - x4, 2) + Math.pow(y1 - y4, 2));   // Distance of line from p4 to p1
 
         return output;
+    }
+
+    @Override
+    public String toString() {
+        // Get coordinates for the four points
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+        double x4 = vertices.get(3).coordinates()[0];
+        double y4 = vertices.get(3).coordinates()[1];
+
+        return "Rectangle[(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), " +
+                "(" + x3 + ", " + y3 + "), (" + x4 + ", " + y4 + ")]";
     }
 }

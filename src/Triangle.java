@@ -1,9 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.lang.Math;
 
-public class Triangle implements TwoDShape, Positionable {
+public class Triangle implements TwoDShape {
 
     List<TwoDPoint> vertices;
 
@@ -180,5 +179,19 @@ public class Triangle implements TwoDShape, Positionable {
         output += Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));   // Distance of line from p1 to p3
 
         return output;
+    }
+
+    @Override
+    public String toString() {
+        // Get coordinates for the three points
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+
+        return "Triangle[(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), " +
+                "(" + x3 + ", " + y3 + ")]";
     }
 }

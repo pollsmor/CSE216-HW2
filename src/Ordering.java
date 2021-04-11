@@ -14,11 +14,18 @@ public class Ordering {
 
         @Override
         public int compare(TwoDShape o1, TwoDShape o2) {
-            return 0; // TODO
+            // Get smallest (xcoord, ycoord) pair from each shape
+            Point p1 = o1.getPosition().get(0);
+            Point p2 = o2.getPosition().get(0);
+
+            if (p1.coordinates()[0] == p2.coordinates()[0])
+                return (int) Math.floor(p1.coordinates()[1] - p2.coordinates()[1]);
+
+            return (int) Math.floor(p1.coordinates()[0] - p2.coordinates()[0]);
         }
     }
 
-    static <T> void copy(List<? extends TwoDShape> source, List<TwoDShape> destination) {
+    static <T> void copy(List<? extends T> source, List<T> destination) {
         destination.addAll(source);
     }
 
@@ -27,15 +34,17 @@ public class Ordering {
      * PLEASE READ ALL THE COMMENTS IN THIS CODE CAREFULLY BEFORE YOU START WRITING YOUR OWN CODE.
      */
     public static void main(String[] args) {
-        List<TwoDPoint> l = Arrays.asList(new TwoDPoint(-6.8,7.77), new TwoDPoint(4.2,3.69),
-                                          new TwoDPoint(6.7, -5.22), new TwoDPoint(-3.4,-2.5));
+        /*
+        List<TwoDPoint> l = Arrays.asList(new TwoDPoint(6.7,-5.22), new TwoDPoint(-3.4,-2.5),
+                                          new TwoDPoint(-6.8, 7.77), new TwoDPoint(4.2,3.69));
         Quadrilateral quad = new Quadrilateral(l);
-        quad.snap();
+        //quad.snap();
         List<TwoDPoint> quadList = (List<TwoDPoint>) quad.getPosition();
         System.out.println(quadList);
 
         List<TwoDPoint> t = Arrays.asList(new TwoDPoint(15.4, 0.259), new TwoDPoint(13.1, 100.0), new TwoDPoint(-3.49, -7.51));
         Triangle triangle = new Triangle(t);
+         */
 
         List<TwoDShape> shapes = new ArrayList<>();
         List<Point> points = new ArrayList<>();
@@ -45,23 +54,25 @@ public class Ordering {
          * implementations are correct, then the code should compile and yield the expected results of the various
          * shapes being ordered by their smallest x-coordinate, area, volume, surface area, etc. */
 
-        shapes.add(new Circle(0, 0, 4));
+        shapes.add(new Circle(5, 0, 4));
         shapes.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(3, 0), new TwoDPoint(0, 4))));
         shapes.add(new Quadrilateral(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 0),
-                                                   new TwoDPoint(5, 5), new TwoDPoint(0, 5))));
+                                                   new TwoDPoint(-10, 5), new TwoDPoint(0, 5))));
+
+        System.out.println(shapes);
 
         copy(new ArrayList<Circle>(), shapes); // note-1 //
 
-        /*
         // sorting 2d shapes according to various criteria
         shapes.sort(new XLocationShapeComparator());
-        Collections.sort(shapes); // TODO: Must sort the two-dimensional shapes in increasing of their area
+        //System.out.println(shapes);
+        //Collections.sort(shapes); // TODO: Must sort the two-dimensional shapes in increasing of their area
+        //System.out.println(shapes);
 
         // sorting 2d points according to various criteria
         // TODO: Implement a static nested class so that uncommenting the following line works. The XLocationPointComparator must sort all the points in a collection in increasing order of their x-values.
         // points.sort(new XLocationPointComparator());
-        Collections.sort(points); // TODO: Must sort the points in increasing order of their distance from the origin
-         */
+        //Collections.sort(points); // TODO: Must sort the points in increasing order of their distance from the origin
 
         /* ====== SECTION 2 ====== */
         /* if your changes to copy() are correct, uncommenting the following block will also work as expected note that
