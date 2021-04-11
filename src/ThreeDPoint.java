@@ -3,9 +3,12 @@
  * <code>x</code>, <code>y</code>, and <code>z</code> values).
  */
 public class ThreeDPoint implements Point {
+    private double x, y, z;
 
     public ThreeDPoint(double x, double y, double z) {
-        // TODO
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     /**
@@ -13,6 +16,6 @@ public class ThreeDPoint implements Point {
      */
     @Override
     public double[] coordinates() {
-        return null; // TODO
+        return new double[]{x, y, z};
     }
 }

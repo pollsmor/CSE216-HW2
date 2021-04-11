@@ -45,4 +45,12 @@ public class TwoDPoint implements Point {
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof TwoDPoint)) return false;
+        TwoDPoint point = (TwoDPoint) o;
+        return point.coordinates()[0] == this.coordinates()[0] && point.coordinates()[1] == this.coordinates()[1];
+    }
 }

@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.Comparator;
 
 /**
  * An interface to represent a closed form in two-dimensional space. Every class implementing this interface must be

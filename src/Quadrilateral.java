@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Quadrilateral implements TwoDShape, Positionable {
@@ -17,7 +19,60 @@ public class Quadrilateral implements TwoDShape, Positionable {
      */
     @Override
     public void setPosition(List<? extends Point> points) {
-        // TODO
+        if (points.size() < 4 || !(points.get(0) instanceof TwoDPoint) || !(points.get(1) instanceof TwoDPoint) ||
+                !(points.get(2) instanceof TwoDPoint) || !(points.get(3) instanceof TwoDPoint))
+            throw new IllegalArgumentException();
+
+        double x1 = points.get(0).coordinates()[0];
+        double y1 = points.get(0).coordinates()[1];
+        double x2 = points.get(1).coordinates()[0];
+        double y2 = points.get(1).coordinates()[1];
+        double x3 = points.get(2).coordinates()[0];
+        double y3 = points.get(2).coordinates()[1];
+        double x4 = points.get(3).coordinates()[0];
+        double y4 = points.get(3).coordinates()[1];
+
+        // Case where all three points are at the same spot, just return as is
+        if (x1 == x2 && x2 == x3 && x3 == x4 && y1 == y2 && y2 == y3 && y3 == y4)
+            return;
+
+        List<TwoDPoint> vertices = new ArrayList<>(4);
+        List<Point> copyOfPoints = new ArrayList<>(points);
+
+        // Find 1st pair, located as far to the bottom left as possible
+        double leastXCoord = Math.min(Math.min(x1, x2), Math.min(x3, x4));
+        List<Double> ycoordsPairedWithLeastXCoord = new ArrayList<>(4);
+        if (x1 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y1);
+        if (x2 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y2);
+        if (x3 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y3);
+        if (x4 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y4);
+        vertices.add(new TwoDPoint(leastXCoord, Collections.min(ycoordsPairedWithLeastXCoord)));
+        // Remove the relevant point from the input list for easier calculations later on
+        if (x1 == leastXCoord && y1 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(0);
+        else if (x2 == leastXCoord && y2 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(1);
+        else if (x3 == leastXCoord && y3 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(2);
+        else copyOfPoints.remove(3);
+
+        // 2nd pair will be located somewhere *above* the 3rd pair, this is assuming a pair has been removed from points
+        x1 = copyOfPoints.get(0).coordinates()[0];
+        y1 = copyOfPoints.get(0).coordinates()[1];
+        x2 = copyOfPoints.get(1).coordinates()[0];
+        y2 = copyOfPoints.get(1).coordinates()[1];
+        x3 = copyOfPoints.get(2).coordinates()[0];
+        y3 = copyOfPoints.get(2).coordinates()[1];
+        double maxYCoord = Math.max(y1, y2);
+        List<Double> xcoordsPairedWithMaxYCoord = new ArrayList<>(2);
+        if (y1 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x1);
+        if (y2 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x2);
+        vertices.add(new TwoDPoint(Collections.min(xcoordsPairedWithMaxYCoord), maxYCoord));
+        // Remove the relevant point f rom the input list, remaining point will be the last one
+        if (y1 == maxYCoord && x1 == Collections.min(xcoordsPairedWithMaxYCoord)) copyOfPoints.remove(0);
+        else copyOfPoints.remove(1);
+
+        // 4th pair
+        vertices.add(new TwoDPoint(copyOfPoints.get(0).coordinates()[0], copyOfPoints.get(0).coordinates()[1]));
+
+        this.vertices = vertices;
     }
 
     /**
@@ -29,7 +84,7 @@ public class Quadrilateral implements TwoDShape, Positionable {
      */
     @Override
     public List<? extends Point> getPosition() {
-        return null; // TODO
+        return vertices;
     }
 
     /**
@@ -50,7 +105,30 @@ public class Quadrilateral implements TwoDShape, Positionable {
      */
     @Override
     public boolean isMember(List<? extends Point> vertices) {
-        return false; // TODO
+        if (vertices.size() < 4) return false;
+
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+        double x4 = vertices.get(3).coordinates()[0];
+        double y4 = vertices.get(3).coordinates()[1];
+
+        // Case where 3/4 points are in a straight line
+        if ((x1 == x2 && x2 == x3 && x1 == x3) || (y1 == y2 && y2 == y3 && y1 == y3) ||         // 1, 2, 3 equal
+                (x2 == x3 && x3 == x4 && x2 == x4) || (y2 == y3 && y3 == y4 && y2 == y4) ||     // 2, 3, 4 equal
+                (x1 == x3 && x3 == x4 && x1 == x4) || (y1 == y3 && y3 == y4 && y1 == y4))       // 1, 3, 4 equal
+            return false;
+
+        // Case where at least 2 of the triangle's points are at the same spot
+        if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) ||
+                vertices.get(0).equals(vertices.get(3)) || vertices.get(1).equals(vertices.get(2)) ||
+                vertices.get(1).equals(vertices.get(3)) || vertices.get(2).equals(vertices.get(3)))
+            return false;
+
+        return true;
     }
 
     /**
@@ -61,7 +139,15 @@ public class Quadrilateral implements TwoDShape, Positionable {
      * Snapping is an in-place procedure, and the current instance is modified.
      */
     public void snap() {
-        // TODO
+        List<TwoDPoint> verticesCopy = new ArrayList<>(vertices);   // Return this in case vertices should not be modified
+        for (int i = 0; i < 4; i++) {
+            double xcoord = vertices.get(i).coordinates()[0]; // Get just decimal part of a double
+            double ycoord = vertices.get(i).coordinates()[1];
+            vertices.set(i, new TwoDPoint(Math.round(xcoord), Math.round(ycoord)));
+        }
+
+        // Check that none of the vertices are equal
+        if (!isMember(vertices)) vertices = verticesCopy;
     }
 
     /**

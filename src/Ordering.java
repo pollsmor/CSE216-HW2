@@ -30,12 +30,12 @@ public class Ordering {
         List<TwoDPoint> l = Arrays.asList(new TwoDPoint(-6.8,7.77), new TwoDPoint(4.2,3.69),
                                           new TwoDPoint(6.7, -5.22), new TwoDPoint(-3.4,-2.5));
         Quadrilateral quad = new Quadrilateral(l);
-        System.out.println(quad.area());
+        quad.snap();
+        List<TwoDPoint> quadList = (List<TwoDPoint>) quad.getPosition();
+        System.out.println(quadList);
 
-        List<TwoDPoint> t = Arrays.asList(new TwoDPoint(15, 0), new TwoDPoint(13, 100), new TwoDPoint(-3.5, -7));
+        List<TwoDPoint> t = Arrays.asList(new TwoDPoint(15.4, 0.259), new TwoDPoint(13.1, 100.0), new TwoDPoint(-3.49, -7.51));
         Triangle triangle = new Triangle(t);
-        List<TwoDPoint> returnedTriangle = (List<TwoDPoint>) triangle.getPosition();
-        System.out.println(returnedTriangle);
 
         List<TwoDShape> shapes = new ArrayList<>();
         List<Point> points = new ArrayList<>();

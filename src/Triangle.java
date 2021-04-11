@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.lang.Math;
 
 public class Triangle implements TwoDShape, Positionable {
 
@@ -100,8 +101,7 @@ public class Triangle implements TwoDShape, Positionable {
      */
     @Override
     public boolean isMember(List<? extends Point> vertices) {
-        if (vertices.size() < 3)
-            return false;
+        if (vertices.size() < 3) return false;
 
         double x1 = vertices.get(0).coordinates()[0];
         double y1 = vertices.get(0).coordinates()[1];
@@ -110,7 +110,12 @@ public class Triangle implements TwoDShape, Positionable {
         double x3 = vertices.get(2).coordinates()[0];
         double y3 = vertices.get(2).coordinates()[1];
 
-        if (x1 == x2 || x2 == x3 || x1 == x3 || y1 == y2 && y2 == y3 || y1 == y3)
+        // Case where triangle's 3 points are in a straight line
+        if ((x1 == x2 && x2 == x3 && x1 == x3) || (y1 == y2 && y2 == y3 && y1 == y3))
+            return false;
+
+        // Case where at least 2 of the triangle's points are at the same spot
+        if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) || vertices.get(1).equals(vertices.get(2)))
             return false;
 
         return true;
@@ -126,8 +131,13 @@ public class Triangle implements TwoDShape, Positionable {
     public void snap() {
         List<TwoDPoint> verticesCopy = new ArrayList<>(vertices);   // Return this in case vertices should not be modified
         for (int i = 0; i < 3; i++) {
-
+            double xcoord = vertices.get(i).coordinates()[0]; // Get just decimal part of a double
+            double ycoord = vertices.get(i).coordinates()[1];
+            vertices.set(i, new TwoDPoint(Math.round(xcoord), Math.round(ycoord)));
         }
+
+        // Check that none of the vertices are equal
+        if (!isMember(vertices)) vertices = verticesCopy;
     }
 
     /**
