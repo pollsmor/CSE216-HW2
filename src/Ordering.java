@@ -27,6 +27,16 @@ public class Ordering {
      * PLEASE READ ALL THE COMMENTS IN THIS CODE CAREFULLY BEFORE YOU START WRITING YOUR OWN CODE.
      */
     public static void main(String[] args) {
+        List<TwoDPoint> l = Arrays.asList(new TwoDPoint(-6.8,7.77), new TwoDPoint(4.2,3.69),
+                                          new TwoDPoint(6.7, -5.22), new TwoDPoint(-3.4,-2.5));
+        Quadrilateral quad = new Quadrilateral(l);
+        System.out.println(quad.area());
+
+        List<TwoDPoint> t = Arrays.asList(new TwoDPoint(15, 0), new TwoDPoint(13, 100), new TwoDPoint(-3.5, -7));
+        Triangle triangle = new Triangle(t);
+        List<TwoDPoint> returnedTriangle = (List<TwoDPoint>) triangle.getPosition();
+        System.out.println(returnedTriangle);
+
         List<TwoDShape> shapes = new ArrayList<>();
         List<Point> points = new ArrayList<>();
 
@@ -42,6 +52,7 @@ public class Ordering {
 
         copy(new ArrayList<Circle>(), shapes); // note-1 //
 
+        /*
         // sorting 2d shapes according to various criteria
         shapes.sort(new XLocationShapeComparator());
         Collections.sort(shapes); // TODO: Must sort the two-dimensional shapes in increasing of their area
@@ -50,6 +61,7 @@ public class Ordering {
         // TODO: Implement a static nested class so that uncommenting the following line works. The XLocationPointComparator must sort all the points in a collection in increasing order of their x-values.
         // points.sort(new XLocationPointComparator());
         Collections.sort(points); // TODO: Must sort the points in increasing order of their distance from the origin
+         */
 
         /* ====== SECTION 2 ====== */
         /* if your changes to copy() are correct, uncommenting the following block will also work as expected note that

@@ -40,4 +40,9 @@ public class TwoDPoint implements Point {
 
         return output;
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Triangle implements TwoDShape, Positionable {
 
@@ -6,6 +8,7 @@ public class Triangle implements TwoDShape, Positionable {
 
     public Triangle(List<TwoDPoint> vertices) {
         this.vertices = vertices;
+        setPosition(this.vertices);
     }
 
     /**
@@ -17,7 +20,54 @@ public class Triangle implements TwoDShape, Positionable {
      */
     @Override
     public void setPosition(List<? extends Point> points) {
-        // TODO
+        if (points.size() < 3 || !(points.get(0) instanceof TwoDPoint) ||
+                                 !(points.get(1) instanceof TwoDPoint) || !(points.get(2) instanceof TwoDPoint))
+            throw new IllegalArgumentException();
+
+        double x1 = points.get(0).coordinates()[0];
+        double y1 = points.get(0).coordinates()[1];
+        double x2 = points.get(1).coordinates()[0];
+        double y2 = points.get(1).coordinates()[1];
+        double x3 = points.get(2).coordinates()[0];
+        double y3 = points.get(2).coordinates()[1];
+
+        // Case where all three points are at the same spot, just return as is
+        if (x1 == x2 && x2 == x3 && y1 == y2 && y2 == y3)
+            return;
+
+        List<TwoDPoint> vertices = new ArrayList<>(3);
+        List<Point> copyOfPoints = new ArrayList<>(points);
+
+        // Find 1st pair, located as far to the bottom left as possible
+        double leastXCoord = Math.min(Math.min(x1, x2), x3);
+        List<Double> ycoordsPairedWithLeastXCoord = new ArrayList<>(3);
+        if (x1 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y1);
+        if (x2 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y2);
+        if (x3 == leastXCoord) ycoordsPairedWithLeastXCoord.add(y3);
+        vertices.add(new TwoDPoint(leastXCoord, Collections.min(ycoordsPairedWithLeastXCoord)));
+        // Remove the relevant point from the input list for easier calculations later on
+        if (x1 == leastXCoord && y1 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(0);
+        else if (x2 == leastXCoord && y2 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(1);
+        else copyOfPoints.remove(2);
+
+        // 2nd pair will be located somewhere *above* the 3rd pair, this is assuming a pair has been removed from points
+        x1 = copyOfPoints.get(0).coordinates()[0];
+        y1 = copyOfPoints.get(0).coordinates()[1];
+        x2 = copyOfPoints.get(1).coordinates()[0];
+        y2 = copyOfPoints.get(1).coordinates()[1];
+        double maxYCoord = Math.max(y1, y2);
+        List<Double> xcoordsPairedWithMaxYCoord = new ArrayList<>(2);
+        if (y1 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x1);
+        if (y2 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x2);
+        vertices.add(new TwoDPoint(Collections.min(xcoordsPairedWithMaxYCoord), maxYCoord));
+        // Remove the relevant point f rom the input list, remaining point will be the last one
+        if (y1 == maxYCoord && x1 == Collections.min(xcoordsPairedWithMaxYCoord)) copyOfPoints.remove(0);
+        else copyOfPoints.remove(1);
+
+        // 3rd pair
+        vertices.add(new TwoDPoint(copyOfPoints.get(0).coordinates()[0], copyOfPoints.get(0).coordinates()[1]));
+
+        this.vertices = vertices;
     }
 
     /**
@@ -29,7 +79,7 @@ public class Triangle implements TwoDShape, Positionable {
      */
     @Override
     public List<? extends Point> getPosition() {
-        return null; // TODO
+        return vertices;
     }
 
     /**
@@ -50,18 +100,34 @@ public class Triangle implements TwoDShape, Positionable {
      */
     @Override
     public boolean isMember(List<? extends Point> vertices) {
-        return false; // TODO
+        if (vertices.size() < 3)
+            return false;
+
+        double x1 = vertices.get(0).coordinates()[0];
+        double y1 = vertices.get(0).coordinates()[1];
+        double x2 = vertices.get(1).coordinates()[0];
+        double y2 = vertices.get(1).coordinates()[1];
+        double x3 = vertices.get(2).coordinates()[0];
+        double y3 = vertices.get(2).coordinates()[1];
+
+        if (x1 == x2 || x2 == x3 || x1 == x3 || y1 == y2 && y2 == y3 || y1 == y3)
+            return false;
+
+        return true;
     }
 
     /**
      * This method snaps each vertex of this triangle to its nearest integer-valued x-y coordinate. For example, if
-     * a corner is at (0.8, -0.1), it will be snapped to (1,0). The resultant triangle will thus have all four
+     * a corner is at (0.8, -0.1), it will be snapped to (1,0). The resultant triangle will thus have all three
      * vertices in positions with integer x and y values. If the snapping procedure described above results in this
      * triangle becoming invalid (e.g., all corners collapse to a single point), then it is left unchanged. Snapping is
      * an in-place procedure, and the current instance is modified.
      */
     public void snap() {
-        // TODO
+        List<TwoDPoint> verticesCopy = new ArrayList<>(vertices);   // Return this in case vertices should not be modified
+        for (int i = 0; i < 3; i++) {
+
+        }
     }
 
     /**

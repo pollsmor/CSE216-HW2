@@ -5,7 +5,7 @@ public class Quadrilateral implements TwoDShape, Positionable {
     List<TwoDPoint> vertices;
 
     public Quadrilateral(List<TwoDPoint> vertices) {
-        // TODO
+        this.vertices = vertices;
     }
 
     /**
@@ -78,13 +78,22 @@ public class Quadrilateral implements TwoDShape, Positionable {
         double x4 = vertices.get(3).coordinates()[0];
         double y4 = vertices.get(3).coordinates()[1];
 
-        // Get distances of the three lines in the triangle for Heron's formula
+        // Get distances of the four lines to calculate semiperimeter s
         double a = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));   // Distance of line from p1 to p2
         double b = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));   // Distance of line from p2 to p3
         double c = Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y4 - y3, 2));   // Distance of line from p3 to p4
         double d = Math.sqrt(Math.pow(x1 - x4, 2) + Math.pow(y1 - y4, 2));   // Distance of line from p4 to p1
         double s = (a + b + c + d) / 2;
-        return Math.sqrt((s - a) * (s - b) * (s - c) * (s - d));
+
+        // Find angles at vertex 1 and 3
+        double p24 = Math.sqrt(Math.pow(x4 - x2, 2) + Math.pow(y4 - y2, 2)); // Distance of line from p2 to p4
+        double alpha = Math.acos((Math.pow(a, 2) + Math.pow(d, 2) - Math.pow(p24, 2)) /
+                                 (2 * a * d));
+        double gamma = Math.acos((Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(p24, 2)) /
+                (2 * b * c));
+
+        // Apply Bretschenider's formula
+        return Math.sqrt((s - a) * (s - b) * (s - c) * (s - d) - (a * b * c * d * Math.pow(Math.cos((alpha + gamma) / 2), 2)));
     }
 
     /**
