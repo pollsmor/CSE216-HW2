@@ -34,17 +34,17 @@ public class Ordering {
      * PLEASE READ ALL THE COMMENTS IN THIS CODE CAREFULLY BEFORE YOU START WRITING YOUR OWN CODE.
      */
     public static void main(String[] args) {
-        /*
-        List<TwoDPoint> l = Arrays.asList(new TwoDPoint(6.7,-5.22), new TwoDPoint(-3.4,-2.5),
-                                          new TwoDPoint(-6.8, 7.77), new TwoDPoint(4.2,3.69));
+        List<TwoDPoint> l = Arrays.asList(new TwoDPoint(0,0), new TwoDPoint(1,1),
+                                          new TwoDPoint(3, 3.231), new TwoDPoint(9,9.091));
         Quadrilateral quad = new Quadrilateral(l);
         //quad.snap();
         List<TwoDPoint> quadList = (List<TwoDPoint>) quad.getPosition();
         System.out.println(quadList);
 
-        List<TwoDPoint> t = Arrays.asList(new TwoDPoint(15.4, 0.259), new TwoDPoint(13.1, 100.0), new TwoDPoint(-3.49, -7.51));
+        List<TwoDPoint> t = Arrays.asList(new TwoDPoint(1, 1), new TwoDPoint(2, 2), new TwoDPoint(3, 4));
         Triangle triangle = new Triangle(t);
-         */
+        List<TwoDPoint> triangleList = (List<TwoDPoint>) triangle.getPosition();
+        //System.out.println(triangleList);
 
         List<TwoDShape> shapes = new ArrayList<>();
         List<Point> points = new ArrayList<>();
@@ -59,7 +59,7 @@ public class Ordering {
         shapes.add(new Quadrilateral(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 0),
                                                    new TwoDPoint(-10, 5), new TwoDPoint(0, 5))));
 
-        System.out.println(shapes);
+        //System.out.println(shapes);
 
         copy(new ArrayList<Circle>(), shapes); // note-1 //
 

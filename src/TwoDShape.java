@@ -20,4 +20,6 @@ public interface TwoDShape extends Positionable {
      * type meant to implement triangles.
      */
     boolean isMember(List<? extends Point> vertices);
+
+    double area();
 }

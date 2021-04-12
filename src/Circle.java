@@ -59,6 +59,7 @@ public class Circle implements TwoDShape {
     /**
      * @return the area of this circle
      */
+    @Override
     public double area() {
         return Math.PI * (Math.pow(radius, 2));
     }

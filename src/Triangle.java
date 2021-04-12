@@ -21,7 +21,8 @@ public class Triangle implements TwoDShape {
     @Override
     public void setPosition(List<? extends Point> points) {
         if (points.size() < 3 || !(points.get(0) instanceof TwoDPoint) ||
-                                 !(points.get(1) instanceof TwoDPoint) || !(points.get(2) instanceof TwoDPoint))
+                                 !(points.get(1) instanceof TwoDPoint) || !(points.get(2) instanceof TwoDPoint) ||
+                                 !isMember(points))
             throw new IllegalArgumentException();
 
         double x1 = points.get(0).coordinates()[0];
@@ -37,6 +38,9 @@ public class Triangle implements TwoDShape {
 
         List<TwoDPoint> vertices = new ArrayList<>(3);
         List<Point> copyOfPoints = new ArrayList<>(points);
+        // For polar angle calculations later: average of x and y coords
+        double avgX = (x1 + x2 + x3) / 3;
+        double avgY = (y1 + y2 + y3) / 3;
 
         // Find 1st pair, located as far to the bottom left as possible
         double leastXCoord = Math.min(Math.min(x1, x2), x3);
@@ -50,22 +54,26 @@ public class Triangle implements TwoDShape {
         else if (x2 == leastXCoord && y2 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(1);
         else copyOfPoints.remove(2);
 
-        // 2nd pair will be located somewhere *above* the 3rd pair, this is assuming a pair has been removed from points
+        // Sort by polar angle for remaining points
         x1 = copyOfPoints.get(0).coordinates()[0];
         y1 = copyOfPoints.get(0).coordinates()[1];
         x2 = copyOfPoints.get(1).coordinates()[0];
         y2 = copyOfPoints.get(1).coordinates()[1];
-        double maxYCoord = Math.max(y1, y2);
-        List<Double> xcoordsPairedWithMaxYCoord = new ArrayList<>(2);
-        if (y1 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x1);
-        if (y2 == maxYCoord) xcoordsPairedWithMaxYCoord.add(x2);
-        vertices.add(new TwoDPoint(Collections.min(xcoordsPairedWithMaxYCoord), maxYCoord));
-        // Remove the relevant point f rom the input list, remaining point will be the last one
-        if (y1 == maxYCoord && x1 == Collections.min(xcoordsPairedWithMaxYCoord)) copyOfPoints.remove(0);
-        else copyOfPoints.remove(1);
+
+        double angle1 = Math.atan2(y1 - avgY, x1 - avgX);
+        double angle2 = Math.atan2(y2 - avgY, x2 - avgX);
+        List<Double> angles = new ArrayList<>(2);
+        angles.add(angle1);
+        angles.add(angle2);
+        angles.sort(Collections.reverseOrder()); // Solution gets counterclockwise order
+
+        // 2nd pair
+        if (angles.get(0) == angle1) vertices.add(new TwoDPoint(x1, y1));
+        else if (angles.get(0) == angle2) vertices.add(new TwoDPoint(x2, y2));
 
         // 3rd pair
-        vertices.add(new TwoDPoint(copyOfPoints.get(0).coordinates()[0], copyOfPoints.get(0).coordinates()[1]));
+        if (angles.get(1) == angle1) vertices.add(new TwoDPoint(x1, y1));
+        else if (angles.get(1) == angle2) vertices.add(new TwoDPoint(x2, y2));
 
         this.vertices = vertices;
     }
@@ -109,13 +117,16 @@ public class Triangle implements TwoDShape {
         double x3 = vertices.get(2).coordinates()[0];
         double y3 = vertices.get(2).coordinates()[1];
 
-        // Case where triangle's 3 points are in a straight line
-        if ((x1 == x2 && x2 == x3 && x1 == x3) || (y1 == y2 && y2 == y3 && y1 == y3))
-            return false;
-
         // Case where at least 2 of the triangle's points are at the same spot
         if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) || vertices.get(1).equals(vertices.get(2)))
             return false;
+
+        // Get two of the points to form a line, and check to see if the remaining one does as well
+        // Get two of the points to form a line, and check to see if the remaining one does as well
+        // y = mx + b
+        double m = (y2 - y1) / (x2 - x1);
+        double b = y1 - m * x1;
+        if (y3 == m * x3 + b) return false;
 
         return true;
     }
@@ -142,6 +153,7 @@ public class Triangle implements TwoDShape {
     /**
      * @return the area of this triangle
      */
+    @Override
     public double area() {
         // Get coordinates for the three points
         double x1 = vertices.get(0).coordinates()[0];

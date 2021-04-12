@@ -21,7 +21,7 @@ public class Quadrilateral implements TwoDShape {
     @Override
     public void setPosition(List<? extends Point> points) {
         if (points.size() < 4 || !(points.get(0) instanceof TwoDPoint) || !(points.get(1) instanceof TwoDPoint) ||
-                !(points.get(2) instanceof TwoDPoint) || !(points.get(3) instanceof TwoDPoint))
+                !(points.get(2) instanceof TwoDPoint) || !(points.get(3) instanceof TwoDPoint) || !isMember(points))
             throw new IllegalArgumentException();
 
         double x1 = points.get(0).coordinates()[0];
@@ -72,9 +72,9 @@ public class Quadrilateral implements TwoDShape {
         angles.add(angle1);
         angles.add(angle2);
         angles.add(angle3);
-        angles.sort(Collections.reverseOrder());
+        angles.sort(Collections.reverseOrder()); // Solution gets counterclockwise order
 
-        // 2nd pair - is in counterclockwise order so I actually want to add right to left
+        // 2nd pair
         if (angles.get(0) == angle1) vertices.add(new TwoDPoint(x1, y1));
         else if (angles.get(0) == angle2) vertices.add(new TwoDPoint(x2, y2));
         else if (angles.get(0) == angle3) vertices.add(new TwoDPoint(x3, y3));
@@ -133,17 +133,18 @@ public class Quadrilateral implements TwoDShape {
         double x4 = vertices.get(3).coordinates()[0];
         double y4 = vertices.get(3).coordinates()[1];
 
-        // Case where 3/4 points are in a straight line
-        if ((x1 == x2 && x2 == x3 && x1 == x3) || (y1 == y2 && y2 == y3 && y1 == y3) ||         // 1, 2, 3 equal
-                (x2 == x3 && x3 == x4 && x2 == x4) || (y2 == y3 && y3 == y4 && y2 == y4) ||     // 2, 3, 4 equal
-                (x1 == x3 && x3 == x4 && x1 == x4) || (y1 == y3 && y3 == y4 && y1 == y4))       // 1, 3, 4 equal
-            return false;
-
         // Case where at least 2 of the triangle's points are at the same spot
         if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) ||
                 vertices.get(0).equals(vertices.get(3)) || vertices.get(1).equals(vertices.get(2)) ||
                 vertices.get(1).equals(vertices.get(3)) || vertices.get(2).equals(vertices.get(3)))
             return false;
+
+        // Get two of the points to form a line, and check to see if either of the remaining two lie on it as well
+        // y = mx + b
+        double m = (y2 - y1) / (x2 - x1);
+        double b = y1 - m * x1;
+        if (y3 == m * x3 + b) return false;
+        if (y4 == m * x4 + b) return false;
 
         return true;
     }
@@ -170,6 +171,7 @@ public class Quadrilateral implements TwoDShape {
     /**
      * @return the area of this quadrilateral
      */
+    @Override
     public double area() {
         // Get coordinates for the four points
         double x1 = vertices.get(0).coordinates()[0];
