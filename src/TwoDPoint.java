@@ -42,6 +42,11 @@ public class TwoDPoint implements Point {
     }
 
     @Override
+    public double distanceFromOrigin() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
+    @Override
     public String toString() {
         return "(" + x + ", " + y + ")";
     }

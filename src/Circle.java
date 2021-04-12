@@ -20,7 +20,7 @@ public class Circle implements TwoDShape {
     @Override
     public void setPosition(List<? extends Point> points) {
         Point point = points.get(0);
-        if (!(point instanceof TwoDPoint))
+        if (!isMember(points) || !(point instanceof TwoDPoint))
             throw new IllegalArgumentException();
 
         double[] coords = point.coordinates();
@@ -73,6 +73,6 @@ public class Circle implements TwoDShape {
 
     @Override
     public String toString() {
-        return "Circle[(" + center.coordinates()[0] + ", " + center.coordinates()[1] + "), R: " + radius + "]";
+        return "Circle[center: " + center.coordinates()[0] + "," + center.coordinates()[1] + "; radius: " + radius + "]";
     }
 }

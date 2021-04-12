@@ -198,7 +198,8 @@ public class Quadrilateral implements TwoDShape {
                 (2 * b * c));
 
         // Apply Bretschenider's formula
-        return Math.sqrt((s - a) * (s - b) * (s - c) * (s - d) - (a * b * c * d * Math.pow(Math.cos((alpha + gamma) / 2), 2)));
+        // Rounding to cut off at 2 decimal places
+        return Math.round(Math.sqrt((s - a) * (s - b) * (s - c) * (s - d) - (a * b * c * d * Math.pow(Math.cos((alpha + gamma) / 2), 2))) * 100.0) / 100.0;
     }
 
     /**

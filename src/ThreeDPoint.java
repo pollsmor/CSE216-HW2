@@ -18,4 +18,14 @@ public class ThreeDPoint implements Point {
     public double[] coordinates() {
         return new double[]{x, y, z};
     }
+
+    @Override
+    public double distanceFromOrigin() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ", " + z + ")";
+    }
 }
