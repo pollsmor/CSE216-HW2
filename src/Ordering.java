@@ -25,7 +25,7 @@ public class Ordering {
         public int compare(Point o1, Point o2) {
             // Get xcoords from the two points
             Double x1 = o1.coordinates()[0];
-            Double x2 = o1.coordinates()[1];
+            Double x2 = o2.coordinates()[0];
 
             return (int) Math.floor(x1 - x2);
         }
@@ -35,7 +35,6 @@ public class Ordering {
         destination.addAll(source);
     }
 
-
     /**
      * PLEASE READ ALL THE COMMENTS IN THIS CODE CAREFULLY BEFORE YOU START WRITING YOUR OWN CODE.
      */
@@ -44,14 +43,14 @@ public class Ordering {
         Quadrilateral quad = new Quadrilateral(Arrays.asList(new TwoDPoint(0,1), new TwoDPoint(3,3),
                                                          new TwoDPoint(2, 1), new TwoDPoint(1,2)));
         //System.out.println(quad);
-        System.out.println(quad.area());
+        //System.out.println(quad.area());
         //quad.snap();
         //System.out.println(quad);
 
         // Triangle testing
         Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(1.5, 1.5), new TwoDPoint(0, 5)));
         //System.out.println(triangle);
-        System.out.println(triangle.area());
+        //System.out.println(triangle.area());
         //triangle.snap();
         //System.out.println(triangle);
 
@@ -125,11 +124,11 @@ public class Ordering {
 
         List<TwoDShape> lst = new ArrayList<>();
         lst.add(new Circle(0, 0, 4));
-        lst.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(3, 0), new TwoDPoint(0, 4))));
-        //printAllAndReturnLeast(lst, new Printer());
+        lst.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(300, 0), new TwoDPoint(0, 400))));
+        TwoDShape leastShape = printAllAndReturnLeast(lst, new Printer<>());
+        System.out.println(leastShape);
     }
 
-    // TODO: There's a lot wrong with this method. correct it so that it can work properly with SECTION 3 of the main method written above.
     // NOTE: This method may compile after you implement just one thing, but pay attention to the warnings in your IDE.
     // Just because the method compiles doesn't mean it is fully correct.
     /**
@@ -145,15 +144,15 @@ public class Ordering {
      * @param aPrinter the specified printer instance
      * @return the least element from <code>aList</code>, as per the natural ordering of the shapes
      */
-    /*
-     static TwoDShape printAllAndReturnLeast(List<TwoDShape> aList, AbstractPrinter<Printer<TwoDShape>> aPrinter) {
+    static TwoDShape printAllAndReturnLeast(List<TwoDShape> aList, AbstractPrinter<TwoDShape> aPrinter) {
         TwoDShape least = aList.get(0);
         for (TwoDShape t : aList) {
-            if (least.compareTo(t) < 0)
+            if (least.compareTo(t) > 0)
                 least = t;
+
             aPrinter.print(t);
         }
+
         return least;
     }
-     */
 }

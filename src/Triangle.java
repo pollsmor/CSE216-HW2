@@ -108,8 +108,6 @@ public class Triangle implements TwoDShape {
      */
     @Override
     public boolean isMember(List<? extends Point> vertices) {
-        if (vertices.size() < 3) return false;
-
         double x1 = vertices.get(0).coordinates()[0];
         double y1 = vertices.get(0).coordinates()[1];
         double x2 = vertices.get(1).coordinates()[0];
@@ -191,7 +189,7 @@ public class Triangle implements TwoDShape {
         output += Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));   // Distance of line from p2 to p3
         output += Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));   // Distance of line from p1 to p3
 
-        return output;
+        return Math.round(output * 100.0) / 100.0;
     }
 
     @Override

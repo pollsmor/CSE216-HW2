@@ -122,8 +122,6 @@ public class Quadrilateral implements TwoDShape {
      */
     @Override
     public boolean isMember(List<? extends Point> vertices) {
-        if (vertices.size() < 4) return false;
-
         double x1 = vertices.get(0).coordinates()[0];
         double y1 = vertices.get(0).coordinates()[1];
         double x2 = vertices.get(1).coordinates()[0];
@@ -224,7 +222,7 @@ public class Quadrilateral implements TwoDShape {
         output += Math.sqrt(Math.pow(x4 - x3, 2) + Math.pow(y4 - y3, 2));   // Distance of line from p3 to p4
         output += Math.sqrt(Math.pow(x1 - x4, 2) + Math.pow(y1 - y4, 2));   // Distance of line from p4 to p1
 
-        return output;
+        return Math.round(output * 100.0) / 100.0;
     }
 
     @Override

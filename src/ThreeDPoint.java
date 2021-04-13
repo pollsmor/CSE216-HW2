@@ -28,4 +28,13 @@ public class ThreeDPoint implements Point {
     public String toString() {
         return "(" + x + ", " + y + ", " + z + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof ThreeDPoint)) return false;
+        ThreeDPoint point = (ThreeDPoint) o;
+        return point.coordinates()[0] == this.coordinates()[0] && point.coordinates()[1] == this.coordinates()[1] &&
+                point.coordinates()[2] == this.coordinates()[2];
+    }
 }
