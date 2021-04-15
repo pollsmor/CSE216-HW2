@@ -131,10 +131,15 @@ public class Quadrilateral implements TwoDShape {
         double x4 = vertices.get(3).coordinates()[0];
         double y4 = vertices.get(3).coordinates()[1];
 
-        // Case where at least 2 of the triangle's points are at the same spot
+        // Case where at least 2 of the quadrilateral's points are at the same spot
         if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) ||
                 vertices.get(0).equals(vertices.get(3)) || vertices.get(1).equals(vertices.get(2)) ||
                 vertices.get(1).equals(vertices.get(3)) || vertices.get(2).equals(vertices.get(3)))
+            return false;
+
+        // Case of a vertical line, for three or more points (infinite slope)
+        if ((x1 == 0 && x2 == 0 && x3 == 0) || (x1 == 0 && x2 == 0 && x4 == 0) || (x1 == 0 && x3 == 0 && x4 == 0) ||
+                                               (x2 == 0 && x3 == 0 && x4 == 0))
             return false;
 
         // Get two of the points to form a line, and check to see if either of the remaining two lie on it as well
@@ -237,7 +242,7 @@ public class Quadrilateral implements TwoDShape {
         double x4 = vertices.get(3).coordinates()[0];
         double y4 = vertices.get(3).coordinates()[1];
 
-        return "Rectangle[(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), " +
+        return "Quadrilateral[(" + x1 + ", " + y1 + "), (" + x2 + ", " + y2 + "), " +
                 "(" + x3 + ", " + y3 + "), (" + x4 + ", " + y4 + ")]";
     }
 }

@@ -119,6 +119,9 @@ public class Triangle implements TwoDShape {
         if (vertices.get(0).equals(vertices.get(1)) || vertices.get(0).equals(vertices.get(2)) || vertices.get(1).equals(vertices.get(2)))
             return false;
 
+        // Case of a vertical line (infinite slope)
+        if (x1 == 0 && x2 == 0 && x3 == 0) return false;
+
         // Get two of the points to form a line, and check to see if the remaining one does as well
         // Get two of the points to form a line, and check to see if the remaining one does as well
         // y = mx + b

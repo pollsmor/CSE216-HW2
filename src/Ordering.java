@@ -40,17 +40,17 @@ public class Ordering {
      */
     public static void main(String[] args) {
         // Quadrilateral testing
-        Quadrilateral quad = new Quadrilateral(Arrays.asList(new TwoDPoint(0,1), new TwoDPoint(3,3),
-                                                         new TwoDPoint(2, 1), new TwoDPoint(1,2)));
-        //System.out.println(quad);
-        //System.out.println(quad.area());
-        //quad.snap();
-        //System.out.println(quad);
+        Quadrilateral quad = new Quadrilateral(Arrays.asList(new TwoDPoint(-0.75,1), new TwoDPoint(0,3),
+                                                         new TwoDPoint(6, 10), new TwoDPoint(5,2)));
+        System.out.println(quad);
+        System.out.println(quad.area());
+        quad.snap();
+        System.out.println(quad);
 
         // Triangle testing
-        Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(1.5, 1.5), new TwoDPoint(0, 5)));
-        //System.out.println(triangle);
-        //System.out.println(triangle.area());
+        Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(0, 1.5), new TwoDPoint(5, 5)));
+        System.out.println(triangle);
+        System.out.println(triangle.area());
         //triangle.snap();
         //System.out.println(triangle);
 
@@ -147,7 +147,7 @@ public class Ordering {
     static TwoDShape printAllAndReturnLeast(List<TwoDShape> aList, AbstractPrinter<TwoDShape> aPrinter) {
         TwoDShape least = aList.get(0);
         for (TwoDShape t : aList) {
-            if (least.compareTo(t) > 0)
+            if (least.compareTo(t) < 0)
                 least = t;
 
             aPrinter.print(t);
