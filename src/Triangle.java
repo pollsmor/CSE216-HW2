@@ -20,9 +20,8 @@ public class Triangle implements TwoDShape {
      */
     @Override
     public void setPosition(List<? extends Point> points) {
-        if (points.size() < 3 || !(points.get(0) instanceof TwoDPoint) ||
-                                 !(points.get(1) instanceof TwoDPoint) || !(points.get(2) instanceof TwoDPoint) ||
-                                 !isMember(points))
+        if (points.size() < 3 || !(points.get(0) instanceof TwoDPoint) || !(points.get(1) instanceof TwoDPoint) ||
+                !(points.get(2) instanceof TwoDPoint) || !isMember(points))
             throw new IllegalArgumentException();
 
         double x1 = points.get(0).coordinates()[0];
@@ -32,15 +31,8 @@ public class Triangle implements TwoDShape {
         double x3 = points.get(2).coordinates()[0];
         double y3 = points.get(2).coordinates()[1];
 
-        // Case where all three points are at the same spot, just return as is
-        if (x1 == x2 && x2 == x3 && y1 == y2 && y2 == y3)
-            return;
-
         List<TwoDPoint> vertices = new ArrayList<>(3);
         List<Point> copyOfPoints = new ArrayList<>(points);
-        // For polar angle calculations later: average of x and y coords
-        double avgX = (x1 + x2 + x3) / 3;
-        double avgY = (y1 + y2 + y3) / 3;
 
         // Find 1st pair, located as far to the bottom left as possible
         double leastXCoord = Math.min(Math.min(x1, x2), x3);
@@ -52,28 +44,32 @@ public class Triangle implements TwoDShape {
         // Remove the relevant point from the input list for easier calculations later on
         if (x1 == leastXCoord && y1 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(0);
         else if (x2 == leastXCoord && y2 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(1);
-        else copyOfPoints.remove(2);
+        else if (x3 == leastXCoord && y3 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(2);
 
-        // Sort by polar angle for remaining points
-        x1 = copyOfPoints.get(0).coordinates()[0];
-        y1 = copyOfPoints.get(0).coordinates()[1];
-        x2 = copyOfPoints.get(1).coordinates()[0];
-        y2 = copyOfPoints.get(1).coordinates()[1];
+        // Sort by largest to smallest slope with respect to point A for remaining points
+        x2 = copyOfPoints.get(0).coordinates()[0];
+        y2 = copyOfPoints.get(0).coordinates()[1];
+        x3 = copyOfPoints.get(1).coordinates()[0];
+        y3 = copyOfPoints.get(1).coordinates()[1];
+        double m2 = (y2 - y1) / (x2 - x1);
+        double m3 = (y3 - y1) / (x3 - x1);
+        List<Double> slopes = new ArrayList<>(2);
+        slopes.add(m2);
+        slopes.add(m3);
+        slopes.sort(Collections.reverseOrder());
 
-        double angle1 = Math.atan2(y1 - avgY, x1 - avgX);
-        double angle2 = Math.atan2(y2 - avgY, x2 - avgX);
-        List<Double> angles = new ArrayList<>(2);
-        angles.add(angle1);
-        angles.add(angle2);
-        angles.sort(Collections.reverseOrder()); // Solution gets counterclockwise order
+        // 2nd point - since I have run isMember I can be sure only one slope is infinite (vertical line)
+        if (Double.isNaN(slopes.get(0))) {
+            if (Double.isNaN(m2)) vertices.add(new TwoDPoint(x2, y2));
+            else if (Double.isNaN(m3)) vertices.add(new TwoDPoint(x3, y3));
+        } else {
+            if (slopes.get(0) == m2) vertices.add(new TwoDPoint(x2, y2));
+            else if (slopes.get(0) == m3) vertices.add(new TwoDPoint(x3, y3));
+        }
 
-        // 2nd pair
-        if (angles.get(0) == angle1) vertices.add(new TwoDPoint(x1, y1));
-        else if (angles.get(0) == angle2) vertices.add(new TwoDPoint(x2, y2));
-
-        // 3rd pair
-        if (angles.get(1) == angle1) vertices.add(new TwoDPoint(x1, y1));
-        else if (angles.get(1) == angle2) vertices.add(new TwoDPoint(x2, y2));
+        // 3rd point
+        if (slopes.get(1) == m2) vertices.add(new TwoDPoint(x2, y2));
+        else if (slopes.get(1) == m3) vertices.add(new TwoDPoint(x3, y3));
 
         this.vertices = vertices;
     }

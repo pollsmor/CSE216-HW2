@@ -33,15 +33,8 @@ public class Quadrilateral implements TwoDShape {
         double x4 = points.get(3).coordinates()[0];
         double y4 = points.get(3).coordinates()[1];
 
-        // Case where all three points are at the same spot, just return as is
-        if (x1 == x2 && x2 == x3 && x3 == x4 && y1 == y2 && y2 == y3 && y3 == y4)
-            return;
-
         List<TwoDPoint> vertices = new ArrayList<>(4);
         List<Point> copyOfPoints = new ArrayList<>(points);
-        // For polar angle calculations later: average of x and y coords
-        double avgX = (x1 + x2 + x3 + x4) / 4;
-        double avgY = (y1 + y2 + y3 + y4) / 4;
 
         // Find 1st pair, located as far to the bottom left as possible
         double leastXCoord = Math.min(Math.min(x1, x2), Math.min(x3, x4));
@@ -57,37 +50,42 @@ public class Quadrilateral implements TwoDShape {
         else if (x3 == leastXCoord && y3 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(2);
         else copyOfPoints.remove(3);
 
-        // Sort by polar angle for remaining points
-        x1 = copyOfPoints.get(0).coordinates()[0];
-        y1 = copyOfPoints.get(0).coordinates()[1];
-        x2 = copyOfPoints.get(1).coordinates()[0];
-        y2 = copyOfPoints.get(1).coordinates()[1];
-        x3 = copyOfPoints.get(2).coordinates()[0];
-        y3 = copyOfPoints.get(2).coordinates()[1];
+        // Sort by largest to smallest slope with respect to point A for remaining points
+        x2 = copyOfPoints.get(0).coordinates()[0];
+        y2 = copyOfPoints.get(0).coordinates()[1];
+        x3 = copyOfPoints.get(1).coordinates()[0];
+        y3 = copyOfPoints.get(1).coordinates()[1];
+        x4 = copyOfPoints.get(2).coordinates()[0];
+        y4 = copyOfPoints.get(2).coordinates()[1];
+        double m2 = (y2 - y1) / (x2 - x1);
+        double m3 = (y3 - y1) / (x3 - x1);
+        double m4 = (y4 - y1) / (x4 - x1);
+        List<Double> slopes = new ArrayList<>(3);
+        slopes.add(m2);
+        slopes.add(m3);
+        slopes.add(m4);
+        slopes.sort(Collections.reverseOrder());
 
-        double angle1 = Math.atan2(y1 - avgY, x1 - avgX);
-        double angle2 = Math.atan2(y2 - avgY, x2 - avgX);
-        double angle3 = Math.atan2(y3 - avgY, x3 - avgX);
-        List<Double> angles = new ArrayList<>(3);
-        angles.add(angle1);
-        angles.add(angle2);
-        angles.add(angle3);
-        angles.sort(Collections.reverseOrder()); // Solution gets counterclockwise order
+        // 2nd point - since I have run isMember I can be sure only one slope is infinite (vertical line)
+        if (Double.isNaN(slopes.get(0))) {
+            if (Double.isNaN(m2)) vertices.add(new TwoDPoint(x2, y2));
+            else if (Double.isNaN(m3)) vertices.add(new TwoDPoint(x3, y3));
+            else if (Double.isNaN(m4)) vertices.add(new TwoDPoint(x4, y4));
+        } else {
+            if (slopes.get(0) == m2) vertices.add(new TwoDPoint(x2, y2));
+            else if (slopes.get(0) == m3) vertices.add(new TwoDPoint(x3, y3));
+            else if (slopes.get(0) == m4) vertices.add(new TwoDPoint(x4, y4));
+        }
 
-        // 2nd pair
-        if (angles.get(0) == angle1) vertices.add(new TwoDPoint(x1, y1));
-        else if (angles.get(0) == angle2) vertices.add(new TwoDPoint(x2, y2));
-        else if (angles.get(0) == angle3) vertices.add(new TwoDPoint(x3, y3));
+        // 3rd point
+        if (slopes.get(1) == m2) vertices.add(new TwoDPoint(x2, y2));
+        else if (slopes.get(1) == m3) vertices.add(new TwoDPoint(x3, y3));
+        else if (slopes.get(1) == m4) vertices.add(new TwoDPoint(x4, y4));
 
-        // 3rd pair
-        if (angles.get(1) == angle1) vertices.add(new TwoDPoint(x1, y1));
-        else if (angles.get(1) == angle2) vertices.add(new TwoDPoint(x2, y2));
-        else if (angles.get(1) == angle3) vertices.add(new TwoDPoint(x3, y3));
-
-        // 4th pair
-        if (angles.get(2) == angle1) vertices.add(new TwoDPoint(x1, y1));
-        else if (angles.get(2) == angle2) vertices.add(new TwoDPoint(x2, y2));
-        else if (angles.get(2) == angle3) vertices.add(new TwoDPoint(x3, y3));
+        // 4th point
+        if (slopes.get(2) == m2) vertices.add(new TwoDPoint(x2, y2));
+        else if (slopes.get(2) == m3) vertices.add(new TwoDPoint(x3, y3));
+        else if (slopes.get(2) == m4) vertices.add(new TwoDPoint(x4, y4));
 
         this.vertices = vertices;
     }
