@@ -54,15 +54,15 @@ public class Ordering {
     public static void main(String[] args) {
         // Quadrilateral testing
         Quadrilateral quad = new Quadrilateral(Arrays.asList(new TwoDPoint(-432,32), new TwoDPoint(-432,0.0), new TwoDPoint(32,325.23),new TwoDPoint(-34,325.23)));
-        //System.out.println(quad);
-        //System.out.println(quad.area());
+        System.out.println(quad);
+        System.out.println(quad.area());
         quad.snap();
         //System.out.println(quad);
 
         // Triangle testing
-        Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 5), new TwoDPoint(0, 1.5)));
-        //System.out.println(triangle);
-        //System.out.println(triangle.area());
+        Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 5), new TwoDPoint(0, 5)));
+        System.out.println(triangle);
+        System.out.println(triangle.area());
         //triangle.snap();
         //System.out.println(triangle);
 

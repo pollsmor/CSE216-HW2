@@ -47,6 +47,8 @@ public class Triangle implements TwoDShape {
         else if (x3 == leastXCoord && y3 == Collections.min(ycoordsPairedWithLeastXCoord)) copyOfPoints.remove(2);
 
         // Sort by largest to smallest slope with respect to point A for remaining points
+        x1 = leastXCoord;
+        y1 = Collections.min(ycoordsPairedWithLeastXCoord);
         x2 = copyOfPoints.get(0).coordinates()[0];
         y2 = copyOfPoints.get(0).coordinates()[1];
         x3 = copyOfPoints.get(1).coordinates()[0];
