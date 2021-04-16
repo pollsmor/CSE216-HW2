@@ -11,12 +11,25 @@ public class Ordering {
         public int compare(TwoDShape o1, TwoDShape o2) {
             // Get smallest (xcoord, ycoord) pair from each shape
             Point p1 = o1.getPosition().get(0);
+            double x1 = p1.coordinates()[0];
+            double y1 = p1.coordinates()[1];
+            if (o1 instanceof Circle) {         // Furthest left point on circle is (centerX - radius, centerY)
+                Circle circle1 = (Circle) o1;
+                x1 -= circle1.getRadius();
+            }
+
             Point p2 = o2.getPosition().get(0);
+            double x2 = p2.coordinates()[0];
+            double y2 = p2.coordinates()[1];
+            if (o2 instanceof Circle) {
+                Circle circle2 = (Circle) o2;
+                x2 -= circle2.getRadius();
+            }
 
-            if (p1.coordinates()[0] == p2.coordinates()[0])
-                return (int) Math.floor(p1.coordinates()[1] - p2.coordinates()[1]);
+            if (x1 == x2)
+                return (int) Math.floor(y2 - y1);
 
-            return (int) Math.floor(p1.coordinates()[0] - p2.coordinates()[0]);
+            return (int) Math.floor(x1 - x2);
         }
     }
 
@@ -41,15 +54,15 @@ public class Ordering {
     public static void main(String[] args) {
         // Quadrilateral testing
         Quadrilateral quad = new Quadrilateral(Arrays.asList(new TwoDPoint(-432,32), new TwoDPoint(-432,0.0), new TwoDPoint(32,325.23),new TwoDPoint(-34,325.23)));
-        System.out.println(quad);
-        System.out.println(quad.area());
+        //System.out.println(quad);
+        //System.out.println(quad.area());
         quad.snap();
-        System.out.println(quad);
+        //System.out.println(quad);
 
         // Triangle testing
         Triangle triangle = new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 5), new TwoDPoint(0, 1.5)));
-        System.out.println(triangle);
-        System.out.println(triangle.area());
+        //System.out.println(triangle);
+        //System.out.println(triangle.area());
         //triangle.snap();
         //System.out.println(triangle);
 
@@ -61,7 +74,7 @@ public class Ordering {
          * implementations are correct, then the code should compile and yield the expected results of the various
          * shapes being ordered by their smallest x-coordinate, area, volume, surface area, etc. */
 
-        shapes.add(new Circle(5, 0, 4));
+        shapes.add(new Circle(5, 0, 16));
         shapes.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(3, 0), new TwoDPoint(0, 4))));
         shapes.add(new Quadrilateral(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(5, 0),
                                                    new TwoDPoint(-10, 5), new TwoDPoint(0, 5))));
@@ -74,7 +87,7 @@ public class Ordering {
 
         // sorting 2d shapes according to various criteria
         shapes.sort(new XLocationShapeComparator());
-        //System.out.println(shapes); // Print shapes ordered by X location
+        System.out.println(shapes); // Print shapes ordered by X location
         Collections.sort(shapes);
         //System.out.println(shapes); // Print shapes ordered by area
 
@@ -124,8 +137,8 @@ public class Ordering {
         List<TwoDShape> lst = new ArrayList<>();
         lst.add(new Circle(0, 0, 4));
         lst.add(new Triangle(Arrays.asList(new TwoDPoint(0, 0), new TwoDPoint(300, 0), new TwoDPoint(0, 400))));
-        TwoDShape leastShape = printAllAndReturnLeast(lst, new Printer<>());
-        System.out.println(leastShape);
+        //TwoDShape leastShape = printAllAndReturnLeast(lst, new Printer<>());
+        //System.out.println(leastShape);
     }
 
     // NOTE: This method may compile after you implement just one thing, but pay attention to the warnings in your IDE.

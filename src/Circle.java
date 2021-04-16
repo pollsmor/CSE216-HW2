@@ -11,6 +11,8 @@ public class Circle implements TwoDShape {
         this.radius = r;
     }
 
+    public double getRadius() { return radius; }
+
     /**
      * Sets the position of this circle to be centered at the first element in the specified list of points.
      *
